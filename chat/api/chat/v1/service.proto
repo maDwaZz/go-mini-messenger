@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package chat.v1;
+
+import "api/chat/v1/messages.proto";
+
+option go_package = "proto/api/chat/v1;chatv1";
+
+service ChatService {
+    // Создать личный чат
+    rpc CreateDirectChat(CreateDirectChatRequest) returns (CreateDirectChatResponse) {}
+    // Получить информацию о чате
+    rpc GetChat(GetChatRequest) returns (GetChatResponse) {}
+    // Получить список чатов
+    rpc ListUserChats(ListUserChatsRequest) returns (ListUserChatsResponse) {}
+    // Получить участников
+    rpc ListChatMembers(ListChatMembersRequest) returns (ListChatMembersResponse) {}
+    // Отправить сообщение
+    rpc SendMessage(SendMessageRequest) returns (SendMessageResponse) {}
+    // История сообщений
+    rpc ListMessages(ListMessagesRequest) returns (ListMessagesResponse) {}
+    // Серверный стрим новых сообщений
+    rpc StreamMessages(StreamMessagesRequest) returns (stream Message) {}
+}
