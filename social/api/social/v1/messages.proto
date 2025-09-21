@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package social.v1;
+
+option go_package = "proto/api/social/v1;socialv1";
+
+message FriendRequest {
+    string request_id = 1;
+    FriendRequestStatus status = 2;
+}
+
+message SendFriendRequestRequest {
+    string user_id = 1;
+}
+
+message SendFriendRequestResponse {
+    FriendRequest request = 1;
+}
+
+message ListRequestsRequest {
+    string user_id = 1;
+}
+
+message ListRequestsResponse {
+    repeated FriendRequest requests = 1;
+}
+
+message AcceptFriendRequestRequest {
+    string request_id = 1;
+}
+
+message AcceptFriendRequestResponse {
+    FriendRequest request = 1;
+}
+
+message DeclineFriendRequestRequest {
+    string request_id = 1;
+}
+
+message DeclineFriendRequestResponse {
+    FriendRequest request = 1;
+}
+
+message RemoveFriendRequest {
+    string user_id = 1;
+}
+
+message ListFriendsRequest {
+    string user_id = 1;
+    uint32 limit = 2;
+    optional string cursor = 3;
+}
+
+message ListFriendsResponse {
+    repeated string friend_user_ids = 1;
+    optional string next_cursor = 2;
+}
+
+enum FriendRequestStatus {
+    PENDING = 0;
+    ACCEPTED = 1;
+    DECLINED = 2;
+}

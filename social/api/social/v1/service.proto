@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package social.v1;
+
+import "api/social/v1/messages.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "proto/api/social/v1;socialv1";
+
+service SocialService {
+    // Отправить заявку
+    rpc SendFriendRequest(SendFriendRequestRequest) returns (SendFriendRequestResponse) {}
+    // Входящие заявки
+    rpc ListRequests(ListRequestsRequest) returns (ListRequestsResponse) {}
+    // Принять заявку
+    rpc AcceptFriendRequest(AcceptFriendRequestRequest) returns (AcceptFriendRequestResponse) {}
+    // Отклонить заявку
+    rpc DeclineFriendRequest(DeclineFriendRequestRequest) returns (DeclineFriendRequestResponse) {}
+    // Удалить пользователя из друзей
+    rpc RemoveFriend(RemoveFriendRequest) returns (google.protobuf.Empty) {}
+    // Список друзей
+    rpc ListFriends(ListFriendsRequest) returns (ListFriendsResponse) {}
+}
