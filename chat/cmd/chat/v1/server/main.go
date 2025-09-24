@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "go-mini-messenger/chat/proto/api/chat/v1"
+	pb "go-mini-messenger/chat/proto/chat/v1"
 	"log"
 	"net"
 

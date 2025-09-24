@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "go-mini-messenger/social/proto/api/social/v1"
+	pb "go-mini-messenger/social/proto/social/v1"
 	"log"
 	"net"
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package users.v1;
 
-import "api/users/v1/messages.proto";
+import "users/v1/messages.proto";
 
 option go_package = "proto/api/users/v1;usersv1";
 

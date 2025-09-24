@@ -1,42 +1,37 @@
-# Используем bin в общей директории для всех приложений для установки плагинов protoc
-BIN_PATH := $(CURDIR)/bin
+include vendor.proto.mk
 
-# Добавляем bin в текущей директории в PATH при запуске protoc
-PROTOC = PATH="$$PATH:$(BIN_PATH)" protoc
-
-# Путь до protobuf файлов
-PROTO_PATH := $(CURDIR)/api
-
-# Путь до сгенеренных .pb.go файлов
-PKG_PROTO_PATH := $(CURDIR)/proto
+# Используем bin в текущей директории для установки плагинов protoc
+LOCAL_BIN := $(CURDIR)/bin
 
 # устанавливаем необходимые плагины
-.bin-deps: export GOBIN := $(BIN_PATH)
+.bin-deps: export GOBIN := $(LOCAL_BIN)
 .bin-deps:
 	$(info Installing binary dependencies...)
 
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	go install github.com/bufbuild/buf/cmd/buf@latest
+	go install github.com/yoheimuta/protolint/cmd/protolint@latest
 
-# генерация .go файлов с помощью protoc
-.protoc-generate:
-	mkdir -p $(PKG_PROTO_PATH)
-	$(PROTOC) --proto_path=$(CURDIR) \
-	--go_out=$(PKG_PROTO_PATH) --go_opt paths=source_relative \
-	--go-grpc_out=$(PKG_PROTO_PATH) --go-grpc_opt paths=source_relative \
-	$(PROTO_PATH)/social/v1/service.proto \
-	$(PROTO_PATH)/social/v1/messages.proto
-
-# go mod tidy
-.tidy:
-	GOBIN=$(BIN_PATH) go mod tidy
-
-# Генерация кода из protobuf
-generate: .bin-deps .protoc-generate .tidy
-
+generate: export GOBIN := $(LOCAL_BIN)
+generate:
+	PATH=$(LOCAL_BIN):PATH $(LOCAL_BIN)/buf generate
+    
 # Билд приложения
 build:
-	go build -o $(BIN_PATH) ./cmd/social/v1/server 
+	go build -o $(LOCAL_BIN) ./cmd/social/v1/server
+
+# Линтер
+lint: .proto-lint
+
+# Линтер proto файлов
+.proto-lint:
+	$(LOCAL_BIN)/protolint -config_path ./.protolint.yaml ./proto/
+
+# Форматирование protobuf файлов
+proto-format:
+	$(info run buf format...)
+	$(LOCAL_BIN)/buf format -w
 	
 # Объявляем, что текущие команды не являются файлами и
 # интсрументируем Makefile не искать изменения в файловой системе
@@ -44,5 +39,9 @@ build:
 	.bin-deps \
 	.protoc-generate \
 	.tidy \
+	.proto-lint \
+	proto-format \
+	vendor \
 	generate \
-	build
+	build \
+	lint

@@ -1,7 +1,7 @@
 package main
 
 import (
-	pb "go-mini-messenger/auth/proto/api/auth/v1"
+	pb "go-mini-messenger/auth/proto/auth/v1"
 	"log"
 	"net"
 

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package social.v1;
 
-import "api/social/v1/messages.proto";
+import "social/v1/messages.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "proto/api/social/v1;socialv1";

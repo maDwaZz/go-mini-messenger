@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package chat.v1;
 
-import "api/chat/v1/messages.proto";
+import "chat/v1/messages.proto";
 
 option go_package = "proto/api/chat/v1;chatv1";
 
