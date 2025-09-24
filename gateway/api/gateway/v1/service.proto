@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package gateway.v1;
+
+import "auth/api/auth/v1/service.proto";
+import "chat/api/chat/v1/service.proto";
+import "social/api/social/v1/service.proto";
+import "users/api/users/v1/service.proto";
+
+import "google/api/annotations.proto";
+
+option go_package = "proto/api/gateway/v1;gatewayv1";
+
+// IN PROGRESS, NOT TESTED YET
+
+// GatewayAuthService proxies auth.v1.AuthService
+service GatewayAuthService {
+  rpc Register(auth.v1.RegisterRequest) returns (auth.v1.RegisterResponse) {
+    option (google.api.http) = {
+        post: "/v1/register"
+        body: "*"
+    };
+  }
+  rpc Login(auth.v1.LoginRequest) returns (auth.v1.LoginResponse) {
+    option (google.api.http) = {
+        post: "/v1/login"
+        body: "*"
+    };
+  }
+  rpc Refresh(auth.v1.RefreshRequest) returns (auth.v1.RefreshResponse) {
+    option (google.api.http) = {
+        post: "/v1/refresh"
+        body: "*"
+    };
+  }
+}
+
+// GatewayChatService proxies chat.v1.ChatService
+service GatewayChatService {
+  rpc CreateDirectChat(chat.v1.CreateDirectChatRequest) returns (chat.v1.CreateDirectChatResponse) {
+    option (google.api.http) = {
+        post: "/v1/chats"
+        body: "*"
+    };
+  }
+  rpc GetChat(chat.v1.GetChatRequest) returns (chat.v1.GetChatResponse) {
+    option (google.api.http) = {get: '/v1/chats/{chat_id}'};
+  }
+  rpc ListUserChats(chat.v1.ListUserChatsRequest) returns (chat.v1.ListUserChatsResponse) {
+    option (google.api.http) = {get: '/v1/chats'};
+  }
+  rpc ListChatMembers(chat.v1.ListChatMembersRequest) returns (chat.v1.ListChatMembersResponse) {
+    option (google.api.http) = {get: '/v1/chat-members'};
+  }
+  rpc SendMessage(chat.v1.SendMessageRequest) returns (chat.v1.SendMessageResponse) {
+    option (google.api.http) = {
+        post: "/v1/chats/{chat_id}/messages"
+        body: "*"
+    };
+  }
+  rpc ListMessages(chat.v1.ListMessagesRequest) returns (chat.v1.ListMessagesResponse) {
+    option (google.api.http) = {get: '/v1/chats/{chat_id}/messages'}
+  };
+  rpc StreamMessages(chat.v1.StreamMessagesRequest) returns (stream chat.v1.Message) {
+    option (google.api.http) = {
+      get: "/v1/chats/{chat_id}/messages/stream"
+    };
+  }
+}
+
+// GatewaySocialService proxies social.v1.SocialService
+service GatewaySocialService {
+  rpc SendFriendRequest(social.v1.SendFriendRequestRequest) returns (social.v1.SendFriendRequestResponse) {
+    option (google.api.http) = {
+      post: "/v1/friends/{user_id}/request"
+      body: "*"
+    };
+  }
+  rpc ListRequests(social.v1.ListRequestsRequest) returns (social.v1.ListRequestsResponse) {
+    option (google.api.http) = {
+      get: "/v1/friends"
+    };
+  }
+  rpc AcceptFriendRequest(social.v1.AcceptFriendRequestRequest) returns (social.v1.AcceptFriendRequestResponse) {
+    option (google.api.http) = {
+      post: "/v1/friends/{request_id}/accept"
+      body: "*"
+    };
+  }
+  rpc DeclineFriendRequest(social.v1.DeclineFriendRequestRequest) returns (social.v1.DeclineFriendRequestResponse) {
+    option (google.api.http) = {
+      post: "/v1/friends/{request_id}/decline"
+      body: "*"
+    };
+  }
+  rpc RemoveFriend(social.v1.RemoveFriendRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/v1/friends/{user_id}"
+    };
+  }
+  rpc ListFriends(social.v1.ListFriendsRequest) returns (social.v1.ListFriendsResponse) {
+    option (google.api.http) = {
+      get: "/v1/friends"
+    };
+  }
+}
+
+// GatewayUserService proxies users.v1.UserService
+service GatewayUserService {
+  rpc CreateProfile(users.v1.CreateProfileRequest) returns (users.v1.UserProfile) {
+    option (google.api.http) = {
+      post: "/v1/profiles"
+      body: "*"
+    };
+  }
+  rpc UpdateProfile(users.v1.UpdateProfileRequest) returns (users.v1.UserProfile) {
+    option (google.api.http) = {
+      put: "/v1/profiles/{user_id}"
+      body: "*"
+    };
+  }
+  rpc GetProfileByID(users.v1.GetProfileByIDRequest) returns (users.v1.UserProfile) {
+    option (google.api.http) = {
+      get: "/v1/profiles/{user_id}"
+    };
+  }
+  rpc GetProfileByNickname(users.v1.GetProfileByNicknameRequest) returns (users.v1.UserProfile) {
+    option (google.api.http) = {
+      get: "/v1/profiles{nickname}"
+    };
+  }
+  rpc SearchByNickname(users.v1.SearchByNicknameRequest) returns (users.v1.SearchByNicknameResponse) {
+    option (google.api.http) = {
+      get: "/v1/users/search"
+    };
+  }
+}
