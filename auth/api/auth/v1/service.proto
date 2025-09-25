@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "auth/v1/messages.proto";
+
+option go_package = "proto/api/auth/v1;authv1";
+
+service AuthService {
+    // Регистрация
+    rpc Register(RegisterRequest) returns (RegisterResponse) {}
+    // Выдать JWT токены
+    rpc Login(LoginRequest) returns (LoginResponse) {}
+    // Перевыпустить JWT токены
+    rpc Refresh(RefreshRequest) returns (RefreshResponse) {}
+}

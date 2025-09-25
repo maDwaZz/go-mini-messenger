@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package users.v1;
+
+import "users/v1/messages.proto";
+
+option go_package = "proto/api/users/v1;usersv1";
+
+service UserService {
+    // Создать профиль
+    rpc CreateProfile(CreateProfileRequest) returns (UserProfile) {}
+    // Обновить профиль
+    rpc UpdateProfile(UpdateProfileRequest) returns (UserProfile) {}
+    // Получить профиль по ID
+    rpc GetProfileByID(GetProfileByIDRequest) returns (UserProfile) {}
+    // ППоиск по нику
+    rpc GetProfileByNickname(GetProfileByNicknameRequest) returns (UserProfile) {}
+    // Поиск пользователей
+    rpc SearchByNickname(SearchByNicknameRequest) returns (SearchByNicknameResponse) {}
+}

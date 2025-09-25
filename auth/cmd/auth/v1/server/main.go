@@ -1,0 +1,37 @@
+package main
+
+import (
+	pb "go-mini-messenger/auth/proto/auth/v1"
+	"log"
+	"net"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
+)
+
+type server struct {
+	pb.UnimplementedAuthServiceServer
+}
+
+func NewServer() *server {
+	return &server{}
+}
+
+func main() {
+	implementation := NewServer() // наша реализация сервера
+
+	lis, err := net.Listen("tcp", ":8081")
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	server := grpc.NewServer()
+	pb.RegisterAuthServiceServer(server, implementation) // регистрация обработчиков
+
+	reflection.Register(server) // регистрируем дополнительные обработчики
+
+	log.Printf("server listening at %v", lis.Addr())
+	if err := server.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+}
